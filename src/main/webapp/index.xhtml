@@ -1,181 +1,47 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
 <h:head></h:head>
 <h:body>
-	<ui:composition template="templates/basicTemplate.xhtml">
-		<ui:define name="header">
-			<h2>JSF Demo Project</h2>
-		</ui:define>
+	<h:panelGroup layout="block">
+		<h:panelGroup layout="block">
+			<ui:insert name="header">
+				<ui:include src="/templates/header.xhtml">
+					<ui:param name="header" value="Default header"></ui:param>
+				</ui:include>
+			</ui:insert>
+		</h:panelGroup>
+		<br />
 
-		<ui:define name="content">
-			<h:form id="addForm">
-				<table>
-					<tr>
-						<td>Name :</td>
-						<td><p:inputText value="#{employeeBean.addedEmployee.name}"
-								id="nameAdd" requiredMessage="Please enter value"
-								required="true"
-								validatorMessage="name's length is betwween 3 and 20">
-								<f:validateLength maximum="20" minimum="4" />
-								<f:converter converterId="nameConverter" />
-								<p:ajax event="keyup" update="namevalidate" />
-							</p:inputText></td>
-						<td><h:message for="nameAdd" style="color:red;"
-								id="namevalidate" /></td>
-					</tr>
-
-					<tr>
-						<td>Age :</td>
-						<td><p:inputText value="#{employeeBean.addedEmployee.age}"
-								id="ageAdd" requiredMessage="Please enter value" required="true"
-								validator="#{employeeBean.validateAge}"
-								converterMessage="age must be number">
-								<p:ajax event="keyup" update="agevalidate" />
-							</p:inputText></td>
-						<td><h:message for="ageAdd" style="color:red"
-								id="agevalidate" /></td>
-					</tr>
-
-					<tr>
-						<td>Gender :</td>
-						<td><p:selectOneRadio
-								value="#{employeeBean.addedEmployee.gender}" id="genderAdd"
-								requiredMessage="Please pick one" required="true">
-								<f:selectItem itemValue="MALE" itemLabel="Male" />
-								<f:selectItem itemValue="FEMALE" itemLabel="Female" />
-							</p:selectOneRadio></td>
-						<td><h:message for="genderAdd" style="color:red" /></td>
-					</tr>
-
-					<tr>
-						<td>DOB :</td>
-						<td><p:inputText value="#{employeeBean.addedEmployee.dob}"
-								id="dobAdd" requiredMessage="Please enter value" required="true"
-								converterMessage="format is dd-mm-yyyy">
-								<f:convertDateTime pattern="dd-mm-yyyy" />
-								<f:validator validatorId="dateValidator" />
-								<p:ajax event="keyup" update="dobvalidate" />
-							</p:inputText></td>
-						<td><h:message for="dobAdd" style="color:red"
-								id="dobvalidate" /></td>
-					</tr>
-
-					<tr>
-						<td></td>
-						<td><p:commandButton value="Send"
-								action="#{employeeBean.addEmployee()}" process="@form"
-								update="formTable:data-table succeed">
-							</p:commandButton></td>
-					</tr>
-					<tr><td></td><td><h:message for="succeed" style="color:blue" id="succeed"/></td></tr>
-				</table>
+		<h:panelGroup layout="block">
+			<h:form>
+				<p:selectOneMenu id="selectForm" value="#{employeeBean.selectForm}">
+					<f:selectItem itemLabel="Employee Form" itemValue="true" />
+					<f:selectItem itemLabel="Department Form" itemValue="false" />
+					<p:ajax event="change" update="@all" />
+				</p:selectOneMenu>
 			</h:form>
-
-			<h:form id="formTable">
-
-				<p:dataTable value="#{employeeBean.employees}" var="employee"
-					border="1" cellpadding="3" id="data-table" sortMode="multiple"
-					widgetVar="employeeTable" rows="3" paginator="true">
-
-					<p:column headerText="Name" sortBy="#{employee.name}"
-						filterBy="#{employee.name}">
-						<p:inputText value="#{employee.name}"
-							rendered="#{employee.canEdit}" id="nameUpdate"
-							requiredMessage="Please enter value" required="true"
-							validatorMessage="name's length is betwween 3 and 20">
-							<f:validateLength maximum="20" minimum="3" />
-							<f:converter converterId="nameConverter" />
-						</p:inputText>
-						<h:message for="nameUpdate" style="color:red" />
-						<h:outputText value="#{employee.name}" id="name-output"
-							rendered="#{not employee.canEdit}"></h:outputText>
-
-					</p:column>
-
-					<p:column headerText="Age" sortBy="#{employee.age}"
-						filterBy="#{employee.age}">
-						<p:inputText value="#{employee.age}"
-							rendered="#{employee.canEdit}" id="ageUpdate"
-							requiredMessage="Please enter value" required="true"
-							validatorMessage="age is number between 5 and 50"
-							converterMessage="age must be number">
-							<f:validateLongRange minimum="5" maximum="50" />
-						</p:inputText>
-						<h:message for="ageUpdate" style="color:red" />
-						<h:outputText value="#{employee.age}" id="age-output"
-							rendered="#{not employee.canEdit}"></h:outputText>
-					</p:column>
-
-					<p:column headerText="Gender" sortBy="#{employee.gender}"
-						filterBy="#{employee.gender}" filterMatchMode="exact">
-						<f:facet name="filter">
-							<p:selectOneMenu onchange="PF('employeeTable').filter()">
-								<f:selectItem itemLabel="All" itemValue="#{null}"
-									noSelectionOption="true" />
-								<f:selectItem itemValue="MALE" itemLabel="Male" />
-								<f:selectItem itemValue="FEMALE" itemLabel="Female" />
-							</p:selectOneMenu>
-						</f:facet>
-						<p:selectOneRadio value="#{employee.gender}"
-							rendered="#{employee.canEdit}" id="genderUpdate"
-							requiredMessage="Please pick one" required="true">
-							<f:selectItem itemValue="MALE" itemLabel="Male" />
-							<f:selectItem itemValue="FEMALE" itemLabel="Female" />
-						</p:selectOneRadio>
-						<h:message for="genderUpdate" style="color:red" />
-						<h:outputText value="#{employee.gender}" id="gender-output"
-							rendered="#{not employee.canEdit}"></h:outputText>
-					</p:column>
-
-					<p:column headerText="Dob" sortBy="#{employee.dob}"
-						filterBy="#{employee.dob}" >
-						<!--  <f:facet name="filter">
-							<p:datePicker selectionMode="range"
-								onblur="PF('employeeTable').filter()" /> 
-						</f:facet>-->
-						<p:inputText value="#{employee.dob}"
-							rendered="#{employee.canEdit}" id="dobUpdate"
-							requiredMessage="Please enter value" required="true"
-							converterMessage="format is dd-mm-yyyy">
-							<f:convertDateTime pattern="dd-mm-yyyy" />
-							<f:validator validatorId="dateValidator" />
-						</p:inputText>
-						<h:message for="dobUpdate" style="color:red" />
-						<h:outputText value="#{employee.dob}" id="dob-output"
-							rendered="#{not employee.canEdit}">
-							<f:convertDateTime pattern="dd-mm-yyyy" />
-						</h:outputText>
-					</p:column>
-
-					<p:column>
-						<f:facet name="header">action</f:facet>
-						<p:commandButton rendered="#{not employee.canEdit}" value="Delete"
-							action="#{employeeBean.deleteEmployee(employee)}" process="@form"
-							update="@form">
-						</p:commandButton>
-						<p:commandButton rendered="#{not employee.canEdit}" value="Update"
-							action="#{employeeBean.editEmployee(employee)}" process="@form"
-							update="@form">
-						</p:commandButton>
-					</p:column>
-
-				</p:dataTable>
-				<p:commandButton value="Save"
-					action="#{employeeBean.saveEmployees()}" process="@form"
-					update="@form">
-				</p:commandButton>
-				<p:commandButton value="Cancel"
-					action="#{employeeBean.cancelUpdate()}" immediate="true"
-					process="@form" update="@form">
-				</p:commandButton>
-			</h:form>
-		</ui:define>
-		<ui:define name="footer">
-			<h:outputText style="font-style: italic" value="Made by Bran"></h:outputText>
-		</ui:define>
-	</ui:composition>
+			<h:panelGroup rendered="#{employeeBean.selectForm}">
+				<ui:insert name="content">
+					<ui:include src="/employee.xhtml" />
+				</ui:insert>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{not employeeBean.selectForm}">
+				<ui:insert name="content">
+					<ui:include src="/department.xhtml" />
+				</ui:insert>
+			</h:panelGroup>
+		</h:panelGroup>
+		<br />
+	</h:panelGroup>
+	<h:panelGroup layout="block"
+		style="position:absolute;bottom:0;width:100%;height:60px;margin-left:1100px">
+		<ui:insert name="footer">
+			<ui:include src="/templates/footer.xhtml" />
+		</ui:insert>
+	</h:panelGroup>
 </h:body>
 </html>

@@ -1,21 +1,20 @@
 package beans;
 
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.validator.ValidatorException;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
-
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
+
 import entities.Employee;
 import services.EmployeeService;
 
@@ -24,6 +23,9 @@ import services.EmployeeService;
 public class EmployeeBean implements Serializable{
 	private Employee addedEmployee;
 	private List<Employee> employees;
+	private List<Employee> filterEmployees;
+
+	private boolean selectForm =true; 
 
 	@Inject
 	EmployeeService employeeService;
@@ -31,51 +33,36 @@ public class EmployeeBean implements Serializable{
 	@PostConstruct
 	public void init() {
 		employees = employeeService.getEmployees();
+		System.out.println(employees);
 		addedEmployee = new Employee();
-		
-//		sortBy = new ArrayList<>();
-//        sortBy.add(SortMeta.builder()
-//                .field("name")
-//                .order(SortOrder.ASCENDING)
-//                .build());
-//
-//        sortBy.add(SortMeta.builder()
-//                .field("category")
-//                .order(SortOrder.ASCENDING)
-//                .priority(1)
-//                .build());
+	
 	}
 	
 	@PreDestroy
 	public void destroy() {
-		
 	}
 
 	public void addEmployee() {
-		Employee employee = new Employee(addedEmployee.getName(), addedEmployee.getAge(), addedEmployee.getGender(),
-				addedEmployee.getDob());
-		employeeService.addEmployee(employee);
-		employees = employeeService.getEmployees();
+		employees.add(employeeService.addEmployee(addedEmployee));
 	}
 
 	public void deleteEmployee(Employee employee) {
 		employeeService.deleteEmployee(employee);
-		employees = employeeService.getEmployees();
+		employees.remove(employee);
 	}
 
 	public void editEmployee(Employee employee) {
 		employeeService.editEmployee(employee);
-		employees = employeeService.getEmployees();
 	}
 
 	public void saveEmployees() {
-		employeeService.saveEmployees();
-		employees = employeeService.getEmployees();
+		employeeService.saveEmployees(employees);
 	}
 
 	public void cancelUpdate() {
-		employeeService.cancelUpdate();
-		employees = employeeService.getEmployees();
+		for (Employee employee : employees) {
+			employee.setCanEdit(false);
+		}
 	}
 	
 	public List<Employee> getEmployees() {
@@ -93,6 +80,26 @@ public class EmployeeBean implements Serializable{
 	public void setAddedEmployee(Employee addedEmployee) {
 		this.addedEmployee = addedEmployee;
 	}
+	
+	
+
+	public List<Employee> getFilterEmployees() {
+		return filterEmployees;
+	}
+
+	public void setFilterEmployees(List<Employee> filterEmployees) {
+		this.filterEmployees = filterEmployees;
+	}
+	
+	public boolean isSelectForm() {
+		return selectForm;
+	}
+
+	public void setSelectForm(boolean selectForm) {
+		this.selectForm = selectForm;
+	}
+	
+	
 
 	public void validateAge(FacesContext context, UIComponent component, Object value) throws ValidatorException {
 		try {
@@ -105,4 +112,7 @@ public class EmployeeBean implements Serializable{
 
 	}
 
+
+
 }
+
