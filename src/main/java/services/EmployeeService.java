@@ -41,18 +41,21 @@ public class EmployeeService implements Serializable{
 		Root<Employee> employee = cq.from(Employee.class);
 		TypedQuery<Employee> typedQuery=entityManager.createQuery(
 				cq.select(employee).orderBy(cb.asc(employee.get(Employee_.id))));
+		//TypedQuery<Employee> typeQuery = entityManager.createNamedQuery("Employee.findAllEmployee", Employee.class);
 		List<Employee> employees = typedQuery.getResultList();
 		employees.forEach(e -> entityManager.refresh(e));
 		return employees;
 	}
 	
 	public Employee getEmployeeById(int id) {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Employee> cq =  cb.createQuery(Employee.class);
-		Root<Employee> employee = cq.from(Employee.class);
-		TypedQuery<Employee> typedQuery=entityManager.createQuery(
-				cq.select(employee).where(cb.equal(employee.get(Employee_.id), id)));
-		return typedQuery.getSingleResult();
+//		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+//		CriteriaQuery<Employee> cq =  cb.createQuery(Employee.class);
+//		Root<Employee> employee = cq.from(Employee.class);
+//		TypedQuery<Employee> typedQuery=entityManager.createQuery(
+//				cq.select(employee).where(cb.equal(employee.get(Employee_.id), id)));
+//		return typedQuery.getSingleResult();
+
+		return (Employee) entityManager.createNamedQuery("Employee.findEmployeeById").setParameter("id", 1).getSingleResult();
 	}
 
 	public Employee addEmployee(Employee employee) {

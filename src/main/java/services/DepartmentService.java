@@ -38,12 +38,14 @@ public class DepartmentService implements Serializable{
 	}
 
 	public List<Department> getDepartments() {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Department> cq =  cb.createQuery(Department.class);
-		Root<Department> department = cq.from(Department.class);
-		TypedQuery<Department> typedQuery=entityManager.createQuery(
-				cq.select(department));
-		List<Department> departments = typedQuery.getResultList();
+//		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+//		CriteriaQuery<Department> cq =  cb.createQuery(Department.class);
+//		Root<Department> department = cq.from(Department.class);
+//		TypedQuery<Department> typedQuery=entityManager.createQuery(
+//				cq.select(department));
+//		List<Department> departments = typedQuery.getResultList();
+		
+		List<Department> departments = entityManager.createNamedQuery("Department.findAllDepartment").getResultList();
 		departments.forEach(d -> entityManager.refresh(d));
 		return departments;
 	}

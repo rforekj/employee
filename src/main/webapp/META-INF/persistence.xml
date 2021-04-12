@@ -9,13 +9,14 @@
 
 	<persistence-unit name="EmployeeManagerment">
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<mapping-file>META-INF/queries.xml</mapping-file>
 		<class>entities.Employee</class>
 		<class>entities.Department</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver"
 				value="org.postgresql.Driver" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:postgresql://localhost:3306/employee" />
+				value="jdbc:postgresql://localhost:5432/employee" />
 			<property name="javax.persistence.jdbc.user" value="rforekj" />
 			<property name="javax.persistence.jdbc.password"
 				value="hjeuxt99" />
