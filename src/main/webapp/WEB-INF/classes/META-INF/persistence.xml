@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+  version="1.0" xmlns="http://java.sun.com/xml/ns/persistence">
+
+	<persistence-unit name="EmployeeManagement"
+		transaction-type="JTA">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<jta-data-source>java:jboss/datasources/EmployeeDS</jta-data-source>
+		<mapping-file>META-INF/queries.xml</mapping-file>
+		<class>entities.Employee</class>
+		<class>entities.Department</class>
+		<properties>
+			<!-- <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" 
+				/> <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/employee" 
+				/> <property name="javax.persistence.jdbc.user" value="rforekj" /> <property 
+				name="javax.persistence.jdbc.password" value="hjeuxt99" /> <property name="hibernate.dialect" 
+				value="org.hibernate.dialect.PostgreSQLDialect" /> <property name="hibernate.hbm2ddl.auto" 
+				value="update" /> <property name="hibernate.show_sql" value="true" /> <property 
+				name="hibernate.format_sql" value="true" /> <property name="hibernate.show_sql" 
+				value="true" /> <property name="eclipselink.logging.level" value="FINE" /> 
+				<property name="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO, 
+				SQL=TRACE" /> -->
+			<property name="eclipselink.target-server"
+				value="JBoss" />
+			<property name="javax.persistence.jtaDataSource"
+				value="java:jboss/datasources/EmployeeDS" />
+		</properties>
+	</persistence-unit>
+</persistence>

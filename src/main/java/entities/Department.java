@@ -10,6 +10,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 
 
 
@@ -27,10 +28,13 @@ public class Department {
 	private String departmentDescription;
 	
 	@OneToMany(mappedBy = "department",fetch = FetchType.EAGER)
-	List<Employee> employeeList;
+	private List<Employee> employeeList;
 	
 	@Transient
 	private boolean canEdit = false;
+	
+	@Version
+	private Integer version;
 	
 	public Department() {
 		// TODO Auto-generated constructor stub

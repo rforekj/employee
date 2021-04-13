@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.ejb.Stateless;
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -19,6 +21,7 @@ import entities.Employee;
 import services.EmployeeService;
 
 @Named
+//@Stateless
 @SessionScoped
 public class EmployeeBean implements Serializable{
 	private Employee addedEmployee;

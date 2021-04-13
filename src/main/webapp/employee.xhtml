@@ -7,199 +7,193 @@
 <h:body>
 	<ui:composition>
 
-			<h:form id="addForm">
-				<p:growl id="succeed" showDetail="true" />
-				<table>
-					<tr>
-						<td>Name :</td>
-						<td><p:inputText value="#{employeeBean.addedEmployee.name}"
-								id="nameAdd" requiredMessage="Please enter value"
-								required="true"
-								validatorMessage="name's length is betwween 3 and 20">
-								<f:validateLength maximum="20" minimum="4" />
-								<f:converter converterId="nameConverter" />
-								<p:ajax event="keyup" update="namevalidate" />
-							</p:inputText></td>
-						<td><h:message for="nameAdd" style="color:red;"
-								id="namevalidate" /></td>
-					</tr>
-
-					<tr>
-						<td>Age :</td>
-						<td><p:inputText value="#{employeeBean.addedEmployee.age}"
-								id="ageAdd" requiredMessage="Please enter value" required="true"
-								validator="#{employeeBean.validateAge}"
-								converterMessage="age must be number">
-								<p:ajax event="keyup" update="agevalidate" />
-							</p:inputText></td>
-						<td><h:message for="ageAdd" style="color:red"
-								id="agevalidate" /></td>
-					</tr>
-
-					<tr>
-						<td>Gender :</td>
-						<td><p:selectOneRadio
-								value="#{employeeBean.addedEmployee.gender}" id="genderAdd"
-								requiredMessage="Please pick one gender" required="true">
-								<f:selectItem itemValue="MALE" itemLabel="Male" />
-								<f:selectItem itemValue="FEMALE" itemLabel="Female" />
-							</p:selectOneRadio></td>
-						<td><h:message for="genderAdd" style="color:red" /></td>
-					</tr>
-
-					<tr>
-						<td>DOB :</td>
-						<td><p:inputText value="#{employeeBean.addedEmployee.dob}"
-								id="dobAdd" requiredMessage="Please enter value" required="true"
-								converterMessage="format is dd-mm-yyyy">
-								<f:convertDateTime pattern="dd-mm-yyyy" />
-								<f:validator validatorId="dateValidator" />
-								<p:ajax event="keyup" update="dobvalidate" />
-							</p:inputText></td>
-						<td><h:message for="dobAdd" style="color:red"
-								id="dobvalidate" /></td>
-					</tr>
-
-					<tr>
-						<td>Department :</td>
-						<td><p:selectOneMenu id="departmentAdd"
-								value="#{employeeBean.addedEmployee.department}"
-								requiredMessage="Please select department" required="true">
-								<f:selectItem itemLabel="Select One" itemValue="" />
-								<f:selectItems value="#{departmentBean.departments}"
-									var="department" itemLabel="#{department.departmentName}"
-									itemValue="#{department}" />
-								<f:converter binding="#{departmentConverter}"></f:converter>
-							</p:selectOneMenu></td>
-						<td><h:message for="departmentAdd" style="color:red"
-								id="departmentvalidate" /></td>
-					</tr>
-
-					<tr>
-						<td></td>
-						<td><p:commandButton value="Send"
-								action="#{employeeBean.addEmployee()}" process="@form"
-								update="@all">
-							</p:commandButton></td>
-					</tr>
-				</table>
-			</h:form>
-
-			<h:form id="formTable">
-
-				<p:dataTable value="#{employeeBean.employees}" var="employee"
-					border="1" cellpadding="3" id="data-table" sortMode="multiple"
-					widgetVar="employeeTable" rows="30" paginator="false"
-					filteredValue="#{employeeBean.filterEmployees}">
-
-					<p:column headerText="Name" sortBy="#{employee.name}"
-						filterBy="#{employee.name}">
-						<p:inputText value="#{employee.name}"
-							rendered="#{employee.canEdit}" id="nameUpdate"
-							requiredMessage="Please enter value" required="true"
+		<h:form id="addForm">
+			<p:growl id="succeed" showDetail="true" />
+			<table>
+				<tr>
+					<td>Name :</td>
+					<td><p:inputText value="#{employeeBean.addedEmployee.name}"
+							id="nameAdd" requiredMessage="Please enter value" required="true"
 							validatorMessage="name's length is betwween 3 and 20">
-							<f:validateLength maximum="20" minimum="3" />
+							<f:validateLength maximum="20" minimum="4" />
 							<f:converter converterId="nameConverter" />
-						</p:inputText>
-						<h:message for="nameUpdate" style="color:red" />
-						<h:outputText value="#{employee.name}" id="name-output"
-							rendered="#{not employee.canEdit}"></h:outputText>
+							<p:ajax event="keyup" update="namevalidate" />
+						</p:inputText></td>
+					<td><h:message for="nameAdd" style="color:red;"
+							id="namevalidate" /></td>
+				</tr>
 
-					</p:column>
-
-					<p:column headerText="Age" sortBy="#{employee.age}"
-						filterBy="#{employee.age}">
-						<p:inputText value="#{employee.age}"
-							rendered="#{employee.canEdit}" id="ageUpdate"
-							requiredMessage="Please enter value" required="true"
-							validatorMessage="age is number between 5 and 50"
+				<tr>
+					<td>Age :</td>
+					<td><p:inputText value="#{employeeBean.addedEmployee.age}"
+							id="ageAdd" requiredMessage="Please enter value" required="true"
+							validator="#{employeeBean.validateAge}"
 							converterMessage="age must be number">
-							<f:validateLongRange minimum="5" maximum="50" />
-						</p:inputText>
-						<h:message for="ageUpdate" style="color:red" />
-						<h:outputText value="#{employee.age}" id="age-output"
-							rendered="#{not employee.canEdit}"></h:outputText>
-					</p:column>
+							<p:ajax event="keyup" update="agevalidate" />
+						</p:inputText></td>
+					<td><h:message for="ageAdd" style="color:red" id="agevalidate" /></td>
+				</tr>
 
-					<p:column headerText="Gender" sortBy="#{employee.gender}"
-						filterBy="#{employee.gender}" filterMatchMode="exact">
-						<f:facet name="filter">
-							<p:selectOneMenu onchange="PF('employeeTable').filter()">
-								<f:selectItem itemLabel="All" itemValue="#{null}"
-									noSelectionOption="true" />
-								<f:selectItem itemValue="MALE" itemLabel="Male" />
-								<f:selectItem itemValue="FEMALE" itemLabel="Female" />
-							</p:selectOneMenu>
-						</f:facet>
-						<p:selectOneRadio value="#{employee.gender}"
-							rendered="#{employee.canEdit}" id="genderUpdate"
-							requiredMessage="Please pick one" required="true">
+				<tr>
+					<td>Gender :</td>
+					<td><p:selectOneRadio
+							value="#{employeeBean.addedEmployee.gender}" id="genderAdd"
+							requiredMessage="Please pick one gender" required="true">
 							<f:selectItem itemValue="MALE" itemLabel="Male" />
 							<f:selectItem itemValue="FEMALE" itemLabel="Female" />
-						</p:selectOneRadio>
-						<h:message for="genderUpdate" style="color:red" />
-						<h:outputText value="#{employee.gender}" id="gender-output"
-							rendered="#{not employee.canEdit}"></h:outputText>
-					</p:column>
+						</p:selectOneRadio></td>
+					<td><h:message for="genderAdd" style="color:red" /></td>
+				</tr>
 
-					<p:column headerText="Dob" sortBy="#{employee.dob}">
+				<tr>
+					<td>DOB :</td>
+					<td><p:datePicker id="dobAdd" required="true"
+							requiredMessage="Please select dob"
+							value="#{employeeBean.addedEmployee.dob}" pattern="dd/MM/yyyy">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</p:datePicker></td>
+		
+					<td><h:message for="dobAdd" style="color:red" id="dobvalidate" /></td>
+				</tr>
 
-						<p:inputText value="#{employee.dob}"
-							rendered="#{employee.canEdit}" id="dobUpdate"
-							requiredMessage="Please enter value" required="true"
-							converterMessage="format is dd-mm-yyyy">
-							<f:convertDateTime pattern="dd-mm-yyyy" />
-							<f:validator validatorId="dateValidator" />
-						</p:inputText>
-						<h:message for="dobUpdate" style="color:red" />
-						<h:outputText value="#{employee.dob}" id="dob-output"
-							rendered="#{not employee.canEdit}">
-							<f:convertDateTime pattern="dd-mm-yyyy" />
-						</h:outputText>
-					</p:column>
-
-					<p:column headerText="Department" sortBy="#{employee.deparment.departmentName}"
-						filterBy="#{employee.department.departmentName}">
-						<p:selectOneMenu id="departmentUpdate"
-							rendered="#{employee.canEdit}" value="#{employee.department}"
+				<tr>
+					<td>Department :</td>
+					<td><p:selectOneMenu id="departmentAdd"
+							value="#{employeeBean.addedEmployee.department}"
 							requiredMessage="Please select department" required="true">
 							<f:selectItem itemLabel="Select One" itemValue="" />
 							<f:selectItems value="#{departmentBean.departments}"
 								var="department" itemLabel="#{department.departmentName}"
 								itemValue="#{department}" />
 							<f:converter binding="#{departmentConverter}"></f:converter>
+						</p:selectOneMenu></td>
+					<td><h:message for="departmentAdd" style="color:red"
+							id="departmentvalidate" /></td>
+				</tr>
+
+				<tr>
+					<td></td>
+					<td><p:commandButton value="Send"
+							action="#{employeeBean.addEmployee()}" process="@form"
+							update="@all">
+						</p:commandButton></td>
+				</tr>
+			</table>
+		</h:form>
+
+		<h:form id="formTable">
+
+			<p:dataTable value="#{employeeBean.employees}" var="employee"
+				border="1" cellpadding="3" id="data-table" sortMode="multiple"
+				widgetVar="employeeTable" rows="30" paginator="false"
+				filteredValue="#{employeeBean.filterEmployees}">
+
+				<p:column headerText="Name" sortBy="#{employee.name}"
+					filterBy="#{employee.name}">
+					<p:inputText value="#{employee.name}"
+						rendered="#{employee.canEdit}" id="nameUpdate"
+						requiredMessage="Please enter value" required="true"
+						validatorMessage="name's length is betwween 3 and 20">
+						<f:validateLength maximum="20" minimum="3" />
+						<f:converter converterId="nameConverter" />
+					</p:inputText>
+					<h:message for="nameUpdate" style="color:red" />
+					<h:outputText value="#{employee.name}" id="name-output"
+						rendered="#{not employee.canEdit}"></h:outputText>
+
+				</p:column>
+
+				<p:column headerText="Age" sortBy="#{employee.age}"
+					filterBy="#{employee.age}">
+					<p:inputText value="#{employee.age}" rendered="#{employee.canEdit}"
+						id="ageUpdate" requiredMessage="Please enter value"
+						required="true" validatorMessage="age is number between 5 and 50"
+						converterMessage="age must be number">
+						<f:validateLongRange minimum="5" maximum="50" />
+					</p:inputText>
+					<h:message for="ageUpdate" style="color:red" />
+					<h:outputText value="#{employee.age}" id="age-output"
+						rendered="#{not employee.canEdit}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Gender" sortBy="#{employee.gender}"
+					filterBy="#{employee.gender}" filterMatchMode="exact">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('employeeTable').filter()">
+							<f:selectItem itemLabel="All" itemValue="#{null}"
+								noSelectionOption="true" />
+							<f:selectItem itemValue="MALE" itemLabel="Male" />
+							<f:selectItem itemValue="FEMALE" itemLabel="Female" />
 						</p:selectOneMenu>
-						<h:message for="departmentUpdate" style="color:red" />
-						<h:outputText value="#{employee.department.departmentName}"
-							id="department-output" rendered="#{not employee.canEdit}"></h:outputText>
-					</p:column>
+					</f:facet>
+					<p:selectOneRadio value="#{employee.gender}"
+						rendered="#{employee.canEdit}" id="genderUpdate"
+						requiredMessage="Please pick one" required="true">
+						<f:selectItem itemValue="MALE" itemLabel="Male" />
+						<f:selectItem itemValue="FEMALE" itemLabel="Female" />
+					</p:selectOneRadio>
+					<h:message for="genderUpdate" style="color:red" />
+					<h:outputText value="#{employee.gender}" id="gender-output"
+						rendered="#{not employee.canEdit}"></h:outputText>
+				</p:column>
 
-					<p:column>
-						<f:facet name="header">action</f:facet>
-						<p:commandButton rendered="#{not employee.canEdit}" value="Delete"
-							action="#{employeeBean.deleteEmployee(employee)}" process="@form"
-							update="@form addForm:succeed">
-						</p:commandButton>
-						<p:commandButton rendered="#{not employee.canEdit}" value="Update"
-							action="#{employeeBean.editEmployee(employee)}" process="@form"
-							update="@form">
-						</p:commandButton>
-					</p:column>
+				<p:column headerText="Dob" sortBy="#{employee.dob}">
+				
+					<p:datePicker id="dobUpdate" required="true" rendered="#{employee.canEdit}"
+						requiredMessage="Please select dob"
+						value="#{employee.dob}" pattern="dd/MM/yyyy">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</p:datePicker>
+			
+					<h:message for="dobUpdate" style="color:red" />
+					<h:outputText value="#{employee.dob}" id="dob-output"
+						rendered="#{not employee.canEdit}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</p:column>
 
-				</p:dataTable>
-				<p:commandButton value="Save"
-					action="#{employeeBean.saveEmployees()}" process="@form"
-					update="@form">
-				</p:commandButton>
-				<p:commandButton value="Cancel"
-					action="#{employeeBean.cancelUpdate()}" immediate="true"
-					process="@form" update="@form">
-				</p:commandButton>
-				<p:commandButton value="Refresh"
-					action="#{employeeBean.init()}"
-					process="@form" update="@form">
-				</p:commandButton>
-			</h:form>
+				<p:column headerText="Department"
+					sortBy="#{employee.deparment.departmentName}"
+					filterBy="#{employee.department.departmentName}">
+					<p:selectOneMenu id="departmentUpdate"
+						rendered="#{employee.canEdit}" value="#{employee.department}"
+						requiredMessage="Please select department" required="true">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{departmentBean.departments}"
+							var="department" itemLabel="#{department.departmentName}"
+							itemValue="#{department}" />
+						<f:converter binding="#{departmentConverter}"></f:converter>
+					</p:selectOneMenu>
+					<h:message for="departmentUpdate" style="color:red" />
+					<h:outputText value="#{employee.department.departmentName}"
+						id="department-output" rendered="#{not employee.canEdit}"></h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">action</f:facet>
+					<p:commandButton rendered="#{not employee.canEdit}" value="Delete"
+						action="#{employeeBean.deleteEmployee(employee)}" process="@form"
+						update="@form addForm:succeed">
+					</p:commandButton>
+					<p:commandButton rendered="#{not employee.canEdit}" value="Update"
+						action="#{employeeBean.editEmployee(employee)}" process="@form"
+						update="@form">
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+			<p:commandButton value="Save"
+				action="#{employeeBean.saveEmployees()}" process="@form"
+				update="@form">
+			</p:commandButton>
+			<p:commandButton value="Cancel"
+				action="#{employeeBean.cancelUpdate()}" immediate="true"
+				process="@form" update="@form">
+			</p:commandButton>
+			<p:commandButton value="Refresh" action="#{employeeBean.init()}"
+				process="@form" update="@form">
+			</p:commandButton>
+		</h:form>
 	</ui:composition>
 </h:body>
 </html>

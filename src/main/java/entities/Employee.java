@@ -18,6 +18,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 
 @Entity
 @NamedQueries({
@@ -42,6 +43,9 @@ public class Employee {
 	@ManyToOne
 	@JoinColumn(name = "department_code", referencedColumnName = "department_code")
 	private Department department;
+	
+	@Version
+	private Integer version;
 
 	public Employee() {
 	}

@@ -61,29 +61,23 @@
 			<p:dataTable value="#{departmentBean.departments}" var="department"
 				border="1" cellpadding="3" id="data-tableD" sortMode="multiple"
 				widgetVar="departmentTable"
-				filteredValue="#{departmentBean.filterDepartments}"
-				selectionMode="single"
-				selection="#{departmentBean.selectedDepartment}"
-				rowKey="#{department.departmentCode}">
+				filteredValue="#{departmentBean.filterDepartments}">
 
-				<p:ajax event="rowSelect" listener="#{departmentBean.onRowSelect}"
-					update="@all" />
-				<p:ajax event="rowUnselect"
-					listener="#{departmentBean.onRowUnselect}" update="@all" />
-
+				<p:column style="width:2rem">
+					<p:rowToggler />
+				</p:column>
 
 				<p:column headerText="Department Code"
 					sortBy="#{department.departmentCode}"
 					filterBy="#{department.departmentCode}">
-					<p:inputText value="#{department.departmentCode}"
+					<h:inputHidden value="#{department.departmentCode}"
 						rendered="#{department.canEdit}" id="codeUpdate"
 						requiredMessage="Please enter value" required="true"
 						validatorMessage="name's length is betwween 3 and 20">
 						<f:validateLength maximum="20" minimum="3" />
-					</p:inputText>
+					</h:inputHidden>
 					<h:message for="codeUpdate" style="color:red" />
-					<h:outputText value="#{department.departmentCode}" id="code-output"
-						rendered="#{not department.canEdit}"></h:outputText>
+					<h:outputText value="#{department.departmentCode}" id="code-output"></h:outputText>
 				</p:column>
 
 				<p:column headerText="Department Name" sortBy="#{department.name}"
@@ -126,27 +120,30 @@
 					</p:commandButton>
 				</p:column>
 
+				<p:rowExpansion>
+					<p:dataTable id="employeeTable" value="#{department.employeeList}"
+						var="employee" border="1" cellpadding="3">
+						<p:column headerText="Employee Name">
+							<h:outputText value="#{employee.name}" />
+						</p:column>
+						<p:column headerText="Emloyee Age">
+							<h:outputText value="#{employee.age}" />
+						</p:column>
+						<p:column headerText="Employee Gender">
+							<h:outputText value="#{employee.gender}" />
+						</p:column>
+						<p:column headerText="Employee Dob">
+							<h:outputText value="#{employee.dob}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</p:column>
+					</p:dataTable>
+				</p:rowExpansion>
+
+
 			</p:dataTable>
 
 
-			<p:dataTable rendered="#{not empty departmentBean.selectedDepartment}" id="employeeTable"
-				value="#{departmentBean.selectedDepartment.employeeList}"
-				var="employee" border="1" cellpadding="3">
-				<p:column headerText="Employee Name">
-					<h:outputText value="#{employee.name}" />
-				</p:column>
-				<p:column headerText="Emloyee Age">
-					<h:outputText value="#{employee.age}" />
-				</p:column>
-				<p:column headerText="Employee Gender">
-					<h:outputText value="#{employee.gender}" />
-				</p:column>
-				<p:column headerText="Employee Dob">
-					<h:outputText value="#{employee.dob}">
-						<f:convertDateTime pattern="dd-mm-yyyy" />
-					</h:outputText>
-				</p:column>
-			</p:dataTable>
 			<p:commandButton value="Save"
 				action="#{departmentBean.saveDepartments()}" process="@form"
 				update="@form">
@@ -155,8 +152,7 @@
 				action="#{departmentBean.cancelUpdate()}" immediate="true"
 				process="@form" update="@form">
 			</p:commandButton>
-			<p:commandButton value="Refresh"
-				action="#{departmentBean.init()}"
+			<p:commandButton value="Refresh" action="#{departmentBean.init()}"
 				process="@form" update="@form">
 			</p:commandButton>
 		</h:form>

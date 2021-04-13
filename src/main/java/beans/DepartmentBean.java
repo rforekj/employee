@@ -4,10 +4,6 @@ package beans;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.UnselectEvent;
-
-import dao.DAO;
 import entities.Department;
 
 import java.io.Serializable;
@@ -15,6 +11,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.ejb.Stateless;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.RequestScoped;
@@ -24,12 +21,12 @@ import javax.faces.bean.ViewScoped;
 import services.DepartmentService;
 
 @Named
+//@Stateless
 @SessionScoped
 public class DepartmentBean implements Serializable{
 	private Department addedDepartment;
 	private List<Department> departments;
 	private List<Department> filterDepartments;
-	private Department selectedDepartment;
 
 	@Inject
 	DepartmentService departmentService;
@@ -95,21 +92,6 @@ public class DepartmentBean implements Serializable{
 		this.filterDepartments = filterDepartments;
 	}
 
-	public Department getSelectedDepartment() {
-		return selectedDepartment;
-	}
-
-	public void setSelectedDepartment(Department selectedDepartment) {
-		this.selectedDepartment = selectedDepartment;
-	}
-
-	
-	public void onRowSelect(SelectEvent<Department> event) {
-		selectedDepartment = event.getObject();
-	}
-	public void onRowUnselect(UnselectEvent<Department> event) {
-		selectedDepartment = null;
-	}
 
 
 }

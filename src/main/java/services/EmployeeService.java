@@ -4,11 +4,14 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-
+import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -16,15 +19,15 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
 
-
-import dao.DAO;
 import entities.Employee;
 import entities.Employee_;
 
+@Transactional
 public class EmployeeService implements Serializable{
 	
-	
+	@PersistenceContext(unitName = "EmployeeManagement")
 	EntityManager entityManager;
 	
 	public EmployeeService() {
@@ -32,7 +35,6 @@ public class EmployeeService implements Serializable{
 	
 	@PostConstruct
 	public void init() {
-		entityManager = DAO.entityManager;
 	}
 
 	public List<Employee> getEmployees() {
@@ -58,12 +60,11 @@ public class EmployeeService implements Serializable{
 		return (Employee) entityManager.createNamedQuery("Employee.findEmployeeById").setParameter("id", 1).getSingleResult();
 	}
 
+	@Transactional
 	public Employee addEmployee(Employee employee) {
 		Employee employee2 = new Employee(employee.getName(),employee.getAge(),
 				employee.getGender(),employee.getDob(),employee.getDepartment());
-		if(!entityManager.getTransaction().isActive()) entityManager.getTransaction().begin();
 		entityManager.persist(employee2);
-		entityManager.getTransaction().commit();
 		FacesContext.getCurrentInstance().addMessage("addForm:succeed", new FacesMessage(FacesMessage.SEVERITY_INFO, "succeed", "add succeed"));
 		return employee2;
 	}
@@ -75,9 +76,7 @@ public class EmployeeService implements Serializable{
 		Query query = entityManager.createQuery(
 				delete.where(cb.equal(employeeRoot.get(Employee_.id), employee.getId())));
 		
-		if(!entityManager.getTransaction().isActive()) entityManager.getTransaction().begin();
 		query.executeUpdate();
-		entityManager.getTransaction().commit();
 		FacesContext.getCurrentInstance().addMessage("addForm:succeed", new FacesMessage(FacesMessage.SEVERITY_ERROR, "succeed", "delete succeed"));
 	}
 
@@ -90,8 +89,6 @@ public class EmployeeService implements Serializable{
 		CriteriaUpdate<Employee> cu = cb.createCriteriaUpdate(Employee.class);
 		Root<Employee> employeeRoot = cu.from(Employee.class);
 		
-		if(!entityManager.getTransaction().isActive()) entityManager.getTransaction().begin();
-
 		for(Employee employee: employees ) {
 			cu.set(employeeRoot.get(Employee_.name), employee.getName());
 			cu.set(employeeRoot.get(Employee_.age), employee.getAge());
@@ -102,7 +99,6 @@ public class EmployeeService implements Serializable{
 			entityManager.createQuery(cu).executeUpdate();
 			employee.setCanEdit(false);
 		}
-		entityManager.getTransaction().commit();
 	}
 
 	public void cancelUpdate(List<Employee> employees) {
