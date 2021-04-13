@@ -2,6 +2,7 @@ package entities;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,7 +28,7 @@ public class Department {
 	@Column(name = "department_description")
 	private String departmentDescription;
 	
-	@OneToMany(mappedBy = "department",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "department",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Employee> employeeList;
 	
 	@Transient
@@ -82,14 +83,19 @@ public class Department {
 
 
 	@Override
-	public String toString() {
-		return "Department [departmentCode=" + departmentCode + ", departmentName=" + departmentName+" listEm"+
-			 employeeList;
-	}
+    public boolean equals(Object other) {
+        return (other != null && getClass() == other.getClass() && departmentCode!= null)
+            ? departmentCode.equals(((Department) other).departmentCode)
+            : (other == this);
+    }
 
+    @Override
+    public int hashCode() {
+        return (departmentCode != null) 
+            ? (getClass().hashCode() + departmentCode.hashCode())
+            : super.hashCode();
+    }
 
-	
-	
 	
 	
 }

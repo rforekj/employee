@@ -40,7 +40,7 @@ public class Employee {
 	@Transient
 	private boolean canEdit = false;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "department_code", referencedColumnName = "department_code")
 	private Department department;
 	

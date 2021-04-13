@@ -50,25 +50,31 @@ public class DepartmentService implements Serializable{
 	}
 
 	public List<Department> getDepartments() {
-//		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-//		CriteriaQuery<Department> cq =  cb.createQuery(Department.class);
-//		Root<Department> department = cq.from(Department.class);
-//		TypedQuery<Department> typedQuery=entityManager.createQuery(
-//				cq.select(department));
-//		List<Department> departments = typedQuery.getResultList();
+		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Department> cq =  cb.createQuery(Department.class);
+		Root<Department> department = cq.from(Department.class);
+		TypedQuery<Department> typedQuery=entityManager.createQuery(
+				cq.select(department));
+		List<Department> departments = typedQuery.getResultList();
 		
-		List<Department> departments = entityManager.createNamedQuery("Department.findAllDepartment").getResultList();
+		//List<Department> departments = entityManager.createNamedQuery("Department.findAllDepartment").getResultList();
 		departments.forEach(d -> entityManager.refresh(d));
 		return departments;
 	}
 	
 	public Department getDepartmentByCode(String code) {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaQuery<Department> cq =  cb.createQuery(Department.class);
-		Root<Department> department = cq.from(Department.class);
-		TypedQuery<Department> typedQuery=entityManager.createQuery(
-				cq.select(department).where(cb.equal(department.get(Department_.departmentCode), code)));
-		return typedQuery.getSingleResult();
+//		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+//		CriteriaQuery<Department> cq =  cb.createQuery(Department.class);
+//		Root<Department> department = cq.from(Department.class);
+//		TypedQuery<Department> typedQuery=entityManager.createQuery(
+//				cq.select(department).where(cb.equal(department.get(Department_.departmentCode), code)));
+//		return typedQuery.getSingleResult();
+		
+		Department department = entityManager.find(Department.class, code);
+		//entityManager.detach(department);
+		//department.setDepartmentName("new");
+		//entityManager.flush();
+		return department;
 	}
 	
 	

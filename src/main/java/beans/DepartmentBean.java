@@ -21,35 +21,37 @@ import javax.faces.bean.ViewScoped;
 import services.DepartmentService;
 
 @Named
-//@Stateless
 @SessionScoped
 public class DepartmentBean implements Serializable{
 	private Department addedDepartment;
 	private List<Department> departments;
 	private List<Department> filterDepartments;
+	
 
 	@Inject
 	DepartmentService departmentService;
 
 	@PostConstruct
-	public void init() {		
+	public void init() {
 		departments = departmentService.getDepartments();
 		addedDepartment = new Department();
 	}
 	
-	@PreDestroy
 	public void destroy() {
-		System.out.println("conversation destroy");
 	}
 
 	public void addDepartment() {
-		Department department = departmentService.addDepartment(addedDepartment);
-		if(department!=null) departments.add(department);
+		//Department department = departmentService.addDepartment(addedDepartment);
+		//if(department!=null) departments.add(department);
+		
+		departmentService.addDepartment(addedDepartment);
+		fetchDempartments();
 	}
 
 	public void deleteDepartment(Department department) {
 		departmentService.deleteDepartment(department);
-		departments.remove(department);
+		fetchDempartments();
+		//departments.remove(department);
 	}
 
 	public void editDepartment(Department department) {
@@ -58,12 +60,17 @@ public class DepartmentBean implements Serializable{
 
 	public void saveDepartments() {
 		departmentService.saveDepartments(departments);
+		fetchDempartments();
 	}
 
 	public void cancelUpdate() {
 		for (Department department : departments) {
 			department.setCanEdit(false);
 		}
+	}
+	
+	public void fetchDempartments() {
+		departments = departmentService.getDepartments();
 	}
 	
 	public List<Department> getDepartments() {

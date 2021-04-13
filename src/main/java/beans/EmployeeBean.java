@@ -10,9 +10,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
@@ -21,7 +24,6 @@ import entities.Employee;
 import services.EmployeeService;
 
 @Named
-//@Stateless
 @SessionScoped
 public class EmployeeBean implements Serializable{
 	private Employee addedEmployee;
@@ -32,26 +34,29 @@ public class EmployeeBean implements Serializable{
 
 	@Inject
 	EmployeeService employeeService;
+	
+	@Inject
+	DepartmentBean departmentBean;
 
 	@PostConstruct
 	public void init() {
 		employees = employeeService.getEmployees();
-		System.out.println(employees);
 		addedEmployee = new Employee();
-	
 	}
 	
-	@PreDestroy
 	public void destroy() {
 	}
 
 	public void addEmployee() {
-		employees.add(employeeService.addEmployee(addedEmployee));
+		//employees.add(employeeService.addEmployee(addedEmployee));
+		employeeService.addEmployee(addedEmployee);
+		fetchEmployees();
 	}
 
 	public void deleteEmployee(Employee employee) {
 		employeeService.deleteEmployee(employee);
-		employees.remove(employee);
+		fetchEmployees();
+		//employees.remove(employee);
 	}
 
 	public void editEmployee(Employee employee) {
@@ -60,12 +65,18 @@ public class EmployeeBean implements Serializable{
 
 	public void saveEmployees() {
 		employeeService.saveEmployees(employees);
+		fetchEmployees();
 	}
 
 	public void cancelUpdate() {
 		for (Employee employee : employees) {
 			employee.setCanEdit(false);
 		}
+	}
+	
+	
+	public void fetchEmployees() {
+		employees = employeeService.getEmployees();
 	}
 	
 	public List<Employee> getEmployees() {
@@ -99,6 +110,11 @@ public class EmployeeBean implements Serializable{
 	}
 
 	public void setSelectForm(boolean selectForm) {
+		if(selectForm) {
+			fetchEmployees();
+		} else {
+			departmentBean.fetchDempartments();
+		}
 		this.selectForm = selectForm;
 	}
 	

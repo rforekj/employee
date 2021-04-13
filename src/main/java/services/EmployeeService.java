@@ -57,7 +57,7 @@ public class EmployeeService implements Serializable{
 //				cq.select(employee).where(cb.equal(employee.get(Employee_.id), id)));
 //		return typedQuery.getSingleResult();
 
-		return (Employee) entityManager.createNamedQuery("Employee.findEmployeeById").setParameter("id", 1).getSingleResult();
+		return entityManager.createNamedQuery("Employee.findEmployeeById", Employee.class).setParameter("id", 1).getSingleResult();
 	}
 
 	@Transactional
@@ -70,13 +70,15 @@ public class EmployeeService implements Serializable{
 	}
 
 	public void deleteEmployee(Employee employee) {
-		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
-		CriteriaDelete<Employee> delete =  cb.createCriteriaDelete(Employee.class);
-		Root<Employee> employeeRoot = delete.from(Employee.class);
-		Query query = entityManager.createQuery(
-				delete.where(cb.equal(employeeRoot.get(Employee_.id), employee.getId())));
-		
-		query.executeUpdate();
+//		CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+//		CriteriaDelete<Employee> delete =  cb.createCriteriaDelete(Employee.class);
+//		Root<Employee> employeeRoot = delete.from(Employee.class);
+//		Query query = entityManager.createQuery(
+//				delete.where(cb.equal(employeeRoot.get(Employee_.id), employee.getId())));
+//		query.executeUpdate();
+		if(!entityManager.contains(employee))
+			employee = entityManager.merge(employee);
+		entityManager.remove(employee);
 		FacesContext.getCurrentInstance().addMessage("addForm:succeed", new FacesMessage(FacesMessage.SEVERITY_ERROR, "succeed", "delete succeed"));
 	}
 
@@ -97,6 +99,11 @@ public class EmployeeService implements Serializable{
 			cu.set(employeeRoot.get(Employee_.department), employee.getDepartment());
 			cu.where(cb.equal(employeeRoot.get(Employee_.id), employee.getId()));
 			entityManager.createQuery(cu).executeUpdate();
+			
+
+//			if(!entityManager.contains(employee))
+//				employee = entityManager.merge(employee);
+//			entityManager.refresh(employee);
 			employee.setCanEdit(false);
 		}
 	}
